@@ -8,7 +8,7 @@ import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 
-import axios from 'axios';
+//import axios from 'axios';
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
