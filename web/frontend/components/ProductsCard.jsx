@@ -5,6 +5,8 @@ import {
   TextContainer,
   DisplayText,
   TextStyle,
+  Button,
+  TextField,
 } from "@shopify/polaris";
 import { Toast } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
@@ -13,6 +15,14 @@ export function ProductsCard() {
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
+
+
+  const [userid, setUserID] = useState("");
+
+  const updateUserID = e => {
+    setUserID(e);
+  };
+
   const fetch = useAuthenticatedFetch();
 
   const {
@@ -39,11 +49,11 @@ export function ProductsCard() {
 
     if (response.ok) {
       await refetchProductCount();
-      setToastProps({ content: "5 products created!" });
+      setToastProps({ content: "Products were sent successfully" });
     } else {
       setIsLoading(false);
       setToastProps({
-        content: "There was an error creating products",
+        content: "There was an error sending products",
         error: true,
       });
     }
@@ -53,20 +63,26 @@ export function ProductsCard() {
     <>
       {toastMarkup}
       <Card
-        title="Product Counter"
+        title="Sync with Lokal"
         sectioned
         primaryFooterAction={{
-          content: "Sync Products Manually",
+          content: "Link your Store",
           onAction: handlePopulate,
           loading: isLoading,
         }}
       >
         <TextContainer spacing="loose">
           <p>
-            Sample products are created with a default title and price. You can
-            remove them at any time.
+          By linking your store to Lokal, you agree to share your store's products with us for the purposes of showing your products on our platform, making sales, and marketing. We will not modify or alter any of your product data without your consent. We respect your privacy and will only use your product data for the purposes of our mutual business arrangement.
           </p>
-          <Heading element="h4">
+          <Heading>
+              <DisplayText size="medium">
+                <TextStyle variation="strong">
+                  <TextField label="User ID goes here" value={userid} onChange={updateUserID} />
+                </TextStyle>
+              </DisplayText>
+            </Heading>
+          <Heading element="h5">
             TOTAL PRODUCTS
             <DisplayText size="medium">
               <TextStyle variation="strong">
@@ -75,6 +91,7 @@ export function ProductsCard() {
             </DisplayText>
           </Heading>
         </TextContainer>
+        <Button className="my-button">Sync Products Manually</Button>
       </Card>
     </>
   );

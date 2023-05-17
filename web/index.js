@@ -62,7 +62,7 @@ app.get("/api/products/count", async (_req, res) => {
 app.get("/api/products/sync", async (_req, res) => {
 
   const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
-  webhook.address = 'https://87b1-196-132-38-98.ngrok-free.app/api/products/sync';
+  webhook.address = 'https://fda5-196-132-32-195.ngrok-free.app//api/products/sync';
   webhook.topic = 'products/update';
   webhook.format = "json";
 

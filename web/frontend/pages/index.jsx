@@ -7,10 +7,11 @@ import {
   Stack,
   Link,
   Heading,
+  TextField,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 
-import { trophyImage } from "../assets";
+import { logo } from "../assets";
 
 import { ProductsCard } from "../components";
 
@@ -27,29 +28,23 @@ export default function HomePage() {
               distribution="trailing"
               alignment="center"
             >
-              <Stack.Item fill>
-                <TextContainer spacing="loose">
-                  <Heading>Welcome to Lokal Automated Partners App</Heading>
-                  <p>
-                    Ready to go? Start populating your app with some sample
-                    products to view and test in your store.{" "}
-                  </p>
-                </TextContainer>
-              </Stack.Item>
-              <Stack.Item>
+               <Stack.Item>
                 <div style={{ padding: "0 20px" }}>
                   <Image
-                    source={trophyImage}
-                    alt="Nice work on building a Shopify app"
-                    width={120}
+                    source={logo}
+                    alt="LOKAL"
+                    width={150}
                   />
                 </div>
+              </Stack.Item>
+              <Stack.Item fill>
+                  <Heading>Welcome to Lokal Partners App</Heading>
               </Stack.Item>
             </Stack>
           </Card>
         </Layout.Section>
         <Layout.Section>
-          <ProductsCard />
+          <ProductsCard/>
         </Layout.Section>
       </Layout>
     </Page>
