@@ -8,7 +8,7 @@ import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 
-import axios from 'axios';
+//import axios from 'axios';
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -62,7 +62,7 @@ app.get("/api/products/count", async (_req, res) => {
 app.get("/api/products/sync", async (_req, res) => {
 
   const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
-  webhook.address = 'https://fda5-196-132-32-195.ngrok-free.app//api/products/sync';
+  webhook.address = 'https://partner.lokaleg.com/api/products/sync';
   webhook.topic = 'products/update';
   webhook.format = "json";
 
