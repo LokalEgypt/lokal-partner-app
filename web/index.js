@@ -71,9 +71,9 @@ app.get("/api/products/sync", async (_req, res) => {
 
   const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
 
-  const hasProductUpdateHook = existingHooks.some(hook => hook.topics.includes('products/update'));
+  const hasProductUpdateHook = existingHooks.some(hook => hook.topic == 'products/update');
 
-  const hasProductCreateHook = existingHooks.some(hook => hook.topics.includes('products/create'));
+  const hasProductCreateHook = existingHooks.some(hook => hook.topic == 'products/create');
 
 
   if (hasProductUpdateHook) {
