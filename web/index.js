@@ -67,11 +67,12 @@ app.get("/api/products/sync", async (_req, res) => {
     session: res.locals.shopify.session,
   });
 
-  
+  console.log(existingHooks);
 
   const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
 
   webhook.topics = [];
+
 
   const hasProductUpdateHook = existingHooks.some(hook => hook.topic == 'products/update');
 
@@ -91,10 +92,13 @@ app.get("/api/products/sync", async (_req, res) => {
   //webhook.topics = ['products/update', 'products/create'];
   webhook.format = "json";
 
-  if (webhook.topics.lenght > 0)
+  if (webhook.topics.length > 0){
+    console.log('Will save webhooks ' + webhook.topics);
+    
     await webhook.save({
       update: true,
     });
+  }
 
   const products = await shopify.api.rest.Product.all({
     session: res.locals.shopify.session,
