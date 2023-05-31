@@ -61,19 +61,43 @@ app.get("/api/products/count", async (_req, res) => {
 
 app.get("/api/products/sync", async (_req, res) => {
 
+
+
+  const existingHooks = await shopify.api.rest.Webhook.all({
+    session: res.locals.shopify.session,
+  });
+
+  
+
   const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
+
+  const hasProductUpdateHook = existingHooks.some(hook => hook.topics.includes('products/update'));
+
+  const hasProductCreateHook = existingHooks.some(hook => hook.topics.includes('products/create'));
+
+
+  if (hasProductUpdateHook) {
+    webhook.topics.add('products/update');
+
+
+  if (hasProductCreateHook) {
+    webhook.topics.add('products/create');
+
+
   webhook.address = 'https://partner.lokaleg.com/api/products/sync';
-  webhook.topics = ['products/update', 'products/create'];
+  //webhook.topics = ['products/update', 'products/create'];
   webhook.format = "json";
 
-  await webhook.save({
-    update: true,
-  });
+  if (webhook.topics.lenght > 0)
+    await webhook.save({
+      update: true,
+    });
 
   const products = await shopify.api.rest.Product.all({
     session: res.locals.shopify.session,
   });
 
+  console.log(products);
 
   res.status(200).send({ message: 'Product created successfully'});
 
