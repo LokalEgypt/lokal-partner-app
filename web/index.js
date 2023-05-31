@@ -63,7 +63,7 @@ app.get("/api/products/sync", async (_req, res) => {
 
   const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
   webhook.address = 'https://partner.lokaleg.com/api/products/sync';
-  webhook.topic = 'products/update';
+  webhook.topics = ['products/update', 'products/create'];
   webhook.format = "json";
 
   await webhook.save({
