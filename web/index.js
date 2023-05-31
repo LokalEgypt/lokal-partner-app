@@ -78,10 +78,11 @@ app.get("/api/products/sync", async (_req, res) => {
 
   if (hasProductUpdateHook) {
     webhook.topics.add('products/update');
-
+  }
 
   if (hasProductCreateHook) {
     webhook.topics.add('products/create');
+  }
 
 
   webhook.address = 'https://partner.lokaleg.com/api/products/sync';
