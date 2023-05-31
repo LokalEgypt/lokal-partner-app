@@ -79,11 +79,11 @@ app.get("/api/products/sync", async (_req, res) => {
   const hasProductCreateHook = existingHooks.some(hook => hook.topic == 'products/create');
 
 
-  if (hasProductUpdateHook) {
+  if (!hasProductUpdateHook) {
     webhook.topics.push('products/update');
   }
 
-  if (hasProductCreateHook) {
+  if (!hasProductCreateHook) {
     webhook.topics.push('products/create');
   }
 
@@ -94,7 +94,7 @@ app.get("/api/products/sync", async (_req, res) => {
 
   if (webhook.topics.length > 0){
     console.log('Will save webhooks ' + webhook.topics);
-    
+
     await webhook.save({
       update: true,
     });
