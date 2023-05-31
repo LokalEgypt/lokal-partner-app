@@ -49,11 +49,11 @@ export function ProductsCard() {
 
     if (response.ok) {
       await refetchProductCount();
-      setToastProps({ content: "Products were sent successfully" });
+      setToastProps({ content: "Store was linked successfully" });
     } else {
       setIsLoading(false);
       setToastProps({
-        content: "There was an error sending products",
+        content: "There was an error linking your store.",
         error: true,
       });
     }
