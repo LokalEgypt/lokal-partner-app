@@ -96,11 +96,12 @@ app.get("/api/products/sync", async (_req, res) => {
     console.log('Will save webhooks ' + webhook.topics);
 
     try{
-    await webhook.save({
-      update: true,
-    });
+      await webhook.save({
+        update: true,
+      });
+      res.status(200).send({ message: 'Hooks created'});
     } catch (ex){
-      console.log('Error saving webhook' + ex);
+      console.log('Error saving webhook ' + ex);
       res.status(502).send({ error: ex.Message});
     }
   }
@@ -109,8 +110,7 @@ app.get("/api/products/sync", async (_req, res) => {
     session: res.locals.shopify.session,
   });
 
-  res.status(200).send({ message: 'Product created successfully'});
-
+  
   // await axios({ //Send to shopify
   //   method: 'post',
   //   url: 'https://87b1-196-132-38-98.ngrok-free.app/api/products/sync',
