@@ -106,7 +106,7 @@ app.get("/api/products/sync", async (_req, res) => {
       console.log('Error saving webhook ' + ex);
       res.status(502).send({ error: ex.Message});
     }
-  }
+  
 
   const products = await shopify.api.rest.Product.all({
     session: res.locals.shopify.session,
