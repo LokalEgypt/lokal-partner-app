@@ -113,6 +113,7 @@ app.get("/api/products/sync", async (_req, res) => {
         session: res.locals.shopify.session,
       });
 
+      console.log(products)
       await axios({ //Send to shopify
         method: 'post',
         url: 'https://partner.lokaleg.com/api/products/syncproducts',
@@ -124,7 +125,7 @@ app.get("/api/products/sync", async (_req, res) => {
       });
       
     } catch (error) {
-      
+      console.log(error);
     res.status(500).send({ message: 'Sync failed', error: error });
     }
 
