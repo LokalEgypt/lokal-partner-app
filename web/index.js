@@ -95,16 +95,19 @@ app.get("/api/products/sync", async (_req, res) => {
   if (webhook.topics.length > 0){
     console.log('Will save webhooks ' + webhook.topics);
 
+    try{
     await webhook.save({
       update: true,
     });
+    } catch (ex){
+      console.log('Error saving webhook' + ex.Message);
+      res.status(502).send({ error: ex.Message});
+    }
   }
 
   const products = await shopify.api.rest.Product.all({
     session: res.locals.shopify.session,
   });
-
-  console.log(products);
 
   res.status(200).send({ message: 'Product created successfully'});
 
