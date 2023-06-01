@@ -62,6 +62,9 @@ app.get("/api/products/count", async (_req, res) => {
 app.get("/api/products/sync", async (_req, res) => {
 
 
+  
+  try{
+   
 
   const existingHooks = await shopify.api.rest.Webhook.all({
     session: res.locals.shopify.session,
@@ -69,9 +72,6 @@ app.get("/api/products/sync", async (_req, res) => {
 
   console.log(existingHooks);
 
-  const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
-
-  webhook.topics = [];
 
 
   const hasProductUpdateHook = existingHooks.some(hook => hook.topic == 'products/update');
@@ -80,26 +80,28 @@ app.get("/api/products/sync", async (_req, res) => {
 
 
   if (!hasProductUpdateHook) {
-    webhook.topics.push('products/update');
+    const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
+    webhook.format = "json";
+    webhook.address = 'https://partner.lokaleg.com/api/products/sync';
+    webhook.topic = 'products/update';
+    await webhook.save({
+      update: true,
+    });
   }
 
   if (!hasProductCreateHook) {
-    webhook.topics.push('products/create');
+    const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
+    webhook.format = "json";
+    webhook.address = 'https://partner.lokaleg.com/api/products/sync';
+    webhook.topic = 'products/create';
+    await webhook.save({
+      update: true,
+    });
   }
 
+  
+  res.status(200).send({ message: 'Hooks created'});
 
-  webhook.address = 'https://partner.lokaleg.com/api/products/sync';
-  //webhook.topics = ['products/update', 'products/create'];
-  webhook.format = "json";
-
-  if (webhook.topics.length > 0){
-    console.log('Will save webhooks ' + webhook.topics);
-
-    try{
-      await webhook.save({
-        update: true,
-      });
-      res.status(200).send({ message: 'Hooks created'});
     } catch (ex){
       console.log('Error saving webhook ' + ex);
       res.status(502).send({ error: ex.Message});
