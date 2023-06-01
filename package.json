@@ -14,7 +14,7 @@
   "dependencies": {
     "@shopify/app": "3.45.0",
     "@shopify/cli": "3.45.0",
-    "axios": "^1.3.5"
+    "axios": "^1.4.0"
   },
   "author": "fadyhanna"
 }
