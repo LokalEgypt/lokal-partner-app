@@ -100,7 +100,7 @@ app.get("/api/products/sync", async (_req, res) => {
       update: true,
     });
     } catch (ex){
-      console.log('Error saving webhook' + ex.Message);
+      console.log('Error saving webhook' + ex);
       res.status(502).send({ error: ex.Message});
     }
   }
