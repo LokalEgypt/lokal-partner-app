@@ -106,9 +106,7 @@ app.get("/api/products/sync", async (_req, res) => {
       console.log('Error saving webhook ' + ex);
       res.status(502).send({ error: ex.Message});
     }
-  
-    try {
-      
+    
       const products = await shopify.api.rest.Product.all({
         session: res.locals.shopify.session,
       });
@@ -122,12 +120,11 @@ app.get("/api/products/sync", async (_req, res) => {
         }
       }).then(function (response) {
         res.status(200).send({ response: response ,message: 'Products Sent'});
+      }).catch(function (err) {
+        res.status(500).send({ response: err ,message: 'Error'});
       });
       
-    } catch (error) {
-      console.log(error);
-    res.status(500).send({ message: 'Sync failed', error: error });
-    }
+  
 
 });
 
