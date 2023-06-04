@@ -106,20 +106,11 @@ app.get("/api/products/sync", async (_req, res) => {
     });
   }
 
-  
-  res.status(200).send({ message: 'Hooks created'});
-
-    } catch (ex){
-      console.log('Error saving webhook ' + ex);
-      res.status(502).send({ error: ex.Message});
-    }
-    
       const products = await shopify.api.rest.Product.all({
         session: res.locals.shopify.session,
       });
 
-      console.log(products)
-      await axios({ //Send to shopify
+      await axios({
         method: 'post',
         url: 'https://partner.lokaleg.com/api/products/syncproducts',
         data:  {
@@ -127,15 +118,18 @@ app.get("/api/products/sync", async (_req, res) => {
         }
       }).then(function (response) {
         res.status(200).send({ response: response ,message: 'Products Sent'});
+        return;
       }).catch(function (err) {
         res.status(500).send({ response: err ,message: 'Error'});
+        return;
       });
-      
-  
 
+      res.status(200).send({ message: 'Hooks created'});
+    } catch (ex){
+      console.log('Error saving webhook ' + ex);
+      res.status(502).send({ error: ex.Message});
+    }
 });
-
-
 
 app.get("/api/products/create", async (_req, res) => {
   let status = 200;
