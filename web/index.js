@@ -58,6 +58,13 @@ app.get("/api/products/count", async (_req, res) => {
 });
 
 
+app.get("/api/products/hooks", async (_req, res) => {
+  const hook = await shopify.api.rest.Webhook.count({
+    session: res.locals.shopify.session,
+  });
+  res.status(200).send(hook == 3);
+});
+
 
 app.get("/api/products/sync", async (_req, res) => {
 

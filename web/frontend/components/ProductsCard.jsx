@@ -15,6 +15,8 @@ export function ProductsCard() {
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
+  const [isHook, setIsHook] = useState(false);
+
 
 
   const [userid, setUserID] = useState("");
@@ -38,6 +40,25 @@ export function ProductsCard() {
       },
     },
   });
+
+
+  const {
+    hooks,
+    refetch: refetchHooks,
+    isLoading: isLoadingHooks,
+    isRefetching: isRefetchingHooks,
+  } = useAppQuery({
+    url: "/api/products/hook",
+    reactQueryOptions: {
+      onSuccess: () => {
+        setIsLoading(false);
+        setIsHook(hooks);
+      },
+    },
+  });
+
+
+
 
   const toastMarkup = toastProps.content && !isRefetchingCount && (
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
@@ -66,22 +87,16 @@ export function ProductsCard() {
         title="Sync with Lokal"
         sectioned
         primaryFooterAction={{
-          content: "Link your Store",
+          content: hooks ? "Store Already Linked" : "Link your Store",
           onAction: handlePopulate,
-          loading: isLoading,
+          loading: isLoadingHooks,
+          disabled: hooks
         }}
       >
         <TextContainer spacing="loose">
           <p>
-          By linking your store to Lokal, you agree to share your store's products with us for the purposes of showing your products on our platform, making sales, and marketing. We will not modify or alter any of your product data without your consent. We respect your privacy and will only use your product data for the purposes of our mutual business arrangement.
+          Welcome to our Shopify app! Seamlessly connect your store with LOKAL, our platform for showcasing local fashion brands. Effortlessly sync your products, images, and stock with a single click. Updates to your products automatically reflect on both your store and LOKAL, eliminating the need for manual management. Enjoy real-time stock management, ensuring accurate inventory across platforms. Expand your reach and tap into a global customer base while retaining control over your brand. Join LOKAL and unlock new growth opportunities. Install now to experience the convenience and efficiency our app brings to your business.
           </p>
-          <Heading>
-              <DisplayText size="medium">
-                <TextStyle variation="strong">
-                  <TextField label="User ID goes here" value={userid} onChange={updateUserID} />
-                </TextStyle>
-              </DisplayText>
-            </Heading>
           <Heading element="h5">
             TOTAL PRODUCTS
             <DisplayText size="medium">
@@ -91,7 +106,6 @@ export function ProductsCard() {
             </DisplayText>
           </Heading>
         </TextContainer>
-        <Button className="my-button">Sync Products Manually</Button>
       </Card>
     </>
   );
