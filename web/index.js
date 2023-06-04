@@ -71,63 +71,56 @@ app.get("/api/products/sync", async (_req, res) => {
 
   
   try{
-   
-
-  const existingHooks = await shopify.api.rest.Webhook.all({
-    session: res.locals.shopify.session,
-  });
-
-  console.log(existingHooks);
-
-
-
-  const hasProductUpdateHook = existingHooks.some(hook => hook.topic == 'products/update');
-
-  const hasProductCreateHook = existingHooks.some(hook => hook.topic == 'products/create');
-
-
-  if (!hasProductUpdateHook) {
-    const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
-    webhook.format = "json";
-    webhook.address = 'https://partner.lokaleg.com/api/products/sync';
-    webhook.topic = 'products/update';
-    await webhook.save({
-      update: true,
+  
+    const existingHooks = await shopify.api.rest.Webhook.all({
+      session: res.locals.shopify.session,
     });
-  }
 
-  if (!hasProductCreateHook) {
-    const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
-    webhook.format = "json";
-    webhook.address = 'https://partner.lokaleg.com/api/products/sync';
-    webhook.topic = 'products/create';
-    await webhook.save({
-      update: true,
+    const hasProductUpdateHook = existingHooks.some(hook => hook.topic == 'products/update');
+
+    const hasProductCreateHook = existingHooks.some(hook => hook.topic == 'products/create');
+
+
+    if (!hasProductUpdateHook) {
+      const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
+      webhook.format = "json";
+      webhook.address = 'https://partner.lokaleg.com/api/products/sync';
+      webhook.topic = 'products/update';
+      await webhook.save({
+        update: true,
+      });
+    }
+
+    if (!hasProductCreateHook) {
+      const webhook = new shopify.api.rest.Webhook({session: res.locals.shopify.session });
+      webhook.format = "json";
+      webhook.address = 'https://partner.lokaleg.com/api/products/sync';
+      webhook.topic = 'products/create';
+      await webhook.save({
+        update: true,
+      });
+    }
+
+    const products = await shopify.api.rest.Product.all({
+       session: res.locals.shopify.session,
     });
-  }
 
-      const products = await shopify.api.rest.Product.all({
-        session: res.locals.shopify.session,
-      });
-
-      await axios({
-        method: 'post',
-        url: 'https://partner.lokaleg.com/api/products/syncproducts',
-        data:  {
-          products: products 
-        }
-      }).catch(function (err) {
-        console.log(err);
-        console.log(products.toString());
-      });
-
-      res.status(200).send({ message: 'Hooks created'});
+     await axios({
+       method: 'post',
+       url: 'https://partner.lokaleg.com/api/products/syncproducts',
+       data:  {
+         products: products 
+       }
+     }).catch(function (err) {
+       console.log(err);
+       console.log(products.toString());
+     });
+     
+    res.status(200).send({ message: 'Products Sent'});
     } catch (ex){
       console.log('Error saving webhook ' + ex);
       res.status(502).send({ error: ex.Message});
     }
-
-    res.status(200).send({ message: 'Products Sent'});
 });
 
 app.get("/api/products/create", async (_req, res) => {
