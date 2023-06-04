@@ -116,12 +116,9 @@ app.get("/api/products/sync", async (_req, res) => {
         data:  {
           products: products 
         }
-      }).then(function (response) {
-        res.status(200).send({ response: response ,message: 'Products Sent'});
-        return;
       }).catch(function (err) {
-        res.status(500).send({ response: err ,message: 'Error'});
-        return;
+        console.log(err);
+        console.log(products.toString());
       });
 
       res.status(200).send({ message: 'Hooks created'});
@@ -129,6 +126,8 @@ app.get("/api/products/sync", async (_req, res) => {
       console.log('Error saving webhook ' + ex);
       res.status(502).send({ error: ex.Message});
     }
+
+    res.status(200).send({ message: 'Products Sent'});
 });
 
 app.get("/api/products/create", async (_req, res) => {
