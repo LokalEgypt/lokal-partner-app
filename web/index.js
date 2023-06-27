@@ -1,4 +1,12 @@
 // @ts-check
+
+
+import {ApolloServer} from 'apollo-server-express';
+
+import {resolvers, schema} from './server/graphql/index.js';
+
+//import {resolvers} from './server/graphql/resolvers.js'
+
 import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
@@ -30,6 +38,41 @@ const STATIC_PATH =
 
 
 const app = express();
+
+
+const graphQLServer = new ApolloServer({
+  typeDefs: schema,
+  resolvers,
+  context: async (ctx) => {
+
+    console.log(ctx);
+    const authHeader = ctx.req.headers.authorization;
+    console.log(ctx);
+    console.log(authHeader);
+    const matches = authHeader?.match(/Bearer (.*)/);
+    console.log(matches);
+    let shop;
+    if (matches) {
+      const payload = shopify.api.utils.decodeSessionToken(matches[1]);
+      shop = payload.dest.replace('https://', '');
+      console.log(shop);
+    }
+    if (shop) {
+      const session = await shopify.api.utils.loadOfflineSession(shop);
+      if (session) {
+        return {shop: {domain: shop, accessToken: session.accessToken}};
+      }
+    }
+
+    return {};
+  },
+});
+await graphQLServer.start();
+
+graphQLServer.applyMiddleware({
+  app,
+});
+
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
